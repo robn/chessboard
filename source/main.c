@@ -64,18 +64,17 @@ int main(void) {
     irqEnable(IRQ_VBLANK);
 
     //set video mode and map vram to the background
-    videoSetMode(MODE_0_2D | DISPLAY_BG0_ACTIVE);
-    //videoSetMode(MODE_0_2D | DISPLAY_BG0_ACTIVE | DISPLAY_BG1_ACTIVE);
+    videoSetMode(MODE_0_2D | DISPLAY_BG0_ACTIVE | DISPLAY_BG1_ACTIVE);
     vramSetBankA(VRAM_A_MAIN_BG_0x06000000);
  
     //get the address of the tile and map blocks 
     u8 *tile = (u8 *) BG_TILE_RAM(1);
     u16 *map0 = (u16 *) BG_MAP_RAM(0);
-    //u16 *map1 = (u16 *) BG_MAP_RAM(1);
+    u16 *map1 = (u16 *) BG_MAP_RAM(1);
     
     //tell the DS where we are putting everything and set 256 color mode and that we are using a 32 by 32 tile map.
     BG0_CR = BG_32x32 | BG_COLOR_256 | BG_MAP_BASE(0) | BG_TILE_BASE(1);
-    //BG1_CR = BG_32x32 | BG_COLOR_256 | BG_MAP_BASE(1) | BG_TILE_BASE(1);
+    BG1_CR = BG_32x32 | BG_COLOR_256 | BG_MAP_BASE(1) | BG_TILE_BASE(1);
  
     //load our palette
     BG_PALETTE[0] = RGB15(0,0,0);
@@ -104,6 +103,7 @@ int main(void) {
         n = 4;
 
         draw_board(map0, 1, z, 0);
+        draw_board(map1, 2, z, 2);
 
         if (dir == 0)
             z++;
