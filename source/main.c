@@ -11,7 +11,7 @@ u8 blank_tile[64] = {
     0,0,0,0,0,0,0,0
 };
  
-u8 red_tile[64] = {
+u8 yellow_tile[64] = {
     1,1,1,1,1,1,1,1,
     1,1,1,1,1,1,1,1,
     1,1,1,1,1,1,1,1,
@@ -22,7 +22,7 @@ u8 red_tile[64] = {
     1,1,1,1,1,1,1,1
 };
  
-u8 green_tile[64] = {
+u8 blue_tile[64] = {
     2,2,2,2,2,2,2,2,
     2,2,2,2,2,2,2,2,
     2,2,2,2,2,2,2,2,
@@ -83,8 +83,8 @@ int main(void) {
   
     //copy the tiles into tile memory one after the other
     swiCopy(blank_tile, tile, 32);
-    swiCopy(red_tile, tile + 64, 32);
-    swiCopy(green_tile, tile + 128, 32);
+    swiCopy(yellow_tile, tile + 64, 32);
+    swiCopy(blue_tile, tile + 128, 32);
     
     //create a map in map memory
     /*
