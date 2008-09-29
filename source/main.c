@@ -32,14 +32,15 @@ u8 green_tile[64] = {
     2,2,2,2,2,2,2,2,
     2,2,2,2,2,2,2,2
 };
+
+#define DO_TILE(x,y,z) (((x/z) & 1) ^ ((y/z) & 1))
  
 void draw_board(u16 *map, int tile, int zoom) {
     int x, y;
 
     for (y = 0; y < 24; y++)
         for (x = 0; x < 32; x++)
-            //map[y*32+x] = ((x & zoom) ? 1 : 0) ^ ((y & zoom) ? 1 : 0);
-            map[y*32+x] = ((x / zoom) & 1) ^ ((y / zoom) & 1);
+            map[y*32+x] = DO_TILE(x, y, zoom) * tile;
 }
  
 int main(void) {
