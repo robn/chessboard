@@ -18,7 +18,6 @@ TARGET		:=	$(shell basename $(CURDIR))
 BUILD		:=	build
 SOURCES		:=	gfx source data  
 INCLUDES	:=	include build
-DESTDIR		:= 	/Volumes/DSX/apps
 
 #---------------------------------------------------------------------------------
 # options for code generation
@@ -104,17 +103,6 @@ clean:
 	@rm -fr $(BUILD) $(TARGET).elf $(TARGET).nds $(TARGET).arm9 $(TARGET).ds.gba 
  
  
-#---------------------------------------------------------------------------------
-copy: $(BUILD)
-	cp $(TARGET).nds $(DESTDIR)/$(TARGET).nds
-	diskutil eject /Volumes/DSX
-
-#---------------------------------------------------------------------------------
-install: $(BUILD)
-	cp $(TARGET).nds $(DESTDIR)/$(TARGET).nds
-	$(DLDITOOLBIN) $(DLDITOOLPATCH) $(DESTDIR)/$(TARGET).nds
-	diskutil eject /Volumes/DSX
-
 #---------------------------------------------------------------------------------
 else
  
