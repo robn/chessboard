@@ -33,22 +33,28 @@ u8 green_tile[64] = {
     2,2,2,2,2,2,2,2
 };
  
+void draw_board(u16 *map, int tile, int zoom) {
+    int x, y;
+
+    for (y = 0; y < 24; y++)
+        for (x = 0; x < 32; x++)
+            map[y*32+x] = ((x & zoom) ? 1 : 0) ^ ((y & zoom) ? 1 : 0);
+}
  
 int main(void) {
-    int x, y;
-    
     //set video mode and map vram to the background
-    videoSetMode(MODE_0_2D | DISPLAY_BG0_ACTIVE | DISPLAY_BG1_ACTIVE);
+    videoSetMode(MODE_0_2D | DISPLAY_BG0_ACTIVE);
+    //videoSetMode(MODE_0_2D | DISPLAY_BG0_ACTIVE | DISPLAY_BG1_ACTIVE);
     vramSetBankA(VRAM_A_MAIN_BG_0x06000000);
  
     //get the address of the tile and map blocks 
     u8 *tile = (u8 *) BG_TILE_RAM(1);
     u16 *map0 = (u16 *) BG_MAP_RAM(0);
-    u16 *map1 = (u16 *) BG_MAP_RAM(1);
+    //u16 *map1 = (u16 *) BG_MAP_RAM(1);
     
     //tell the DS where we are putting everything and set 256 color mode and that we are using a 32 by 32 tile map.
     BG0_CR = BG_32x32 | BG_COLOR_256 | BG_MAP_BASE(0) | BG_TILE_BASE(1);
-    BG1_CR = BG_32x32 | BG_COLOR_256 | BG_MAP_BASE(1) | BG_TILE_BASE(1);
+    //BG1_CR = BG_32x32 | BG_COLOR_256 | BG_MAP_BASE(1) | BG_TILE_BASE(1);
  
     //load our palette
     BG_PALETTE[0] = RGB15(0,0,0);
@@ -61,11 +67,15 @@ int main(void) {
     swiCopy(green_tile, tile + 128, 32);
     
     //create a map in map memory
+    /*
     for (y = 0; y < 24; y++)
         for (x = 0; x < 32; x++) {
             map0[y*32+x] = ((x & 2) >> 1) ^ ((y & 2) >> 1);
             map1[y*32+x] = (((x & 2) >> 1) ^ (((y+2) & 2) >> 1)) << 1;
         }
+    */
+
+    draw_board(map0, 1, 6);
  
     return 0;
 }
