@@ -79,12 +79,12 @@ int main(void) {
         }
     */
 
-    int z = 1, dir = 0, n = 10;
+    int z = 1, dir = 0, n = 4;
     while (1) {
         swiWaitForVBlank();
         if (--n)
             continue;
-        n = 10;
+        n = 4;
 
         draw_board(map0, 1, z);
 
