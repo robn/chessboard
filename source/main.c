@@ -42,6 +42,9 @@ void draw_board(u16 *map, int tile, int zoom) {
 }
  
 int main(void) {
+    irqInit();
+    irqEnable(IRQ_VBLANK);
+
     //set video mode and map vram to the background
     videoSetMode(MODE_0_2D | DISPLAY_BG0_ACTIVE);
     //videoSetMode(MODE_0_2D | DISPLAY_BG0_ACTIVE | DISPLAY_BG1_ACTIVE);
@@ -75,7 +78,25 @@ int main(void) {
         }
     */
 
-    draw_board(map0, 1, 6);
+    int z = 1, dir = 0, n = 10;
+    while (1) {
+        swiWaitForVBlank();
+        if (--n)
+            continue;
+        n = 10;
+
+        draw_board(map0, 1, z);
+
+        if (dir == 0)
+            z <<= 1;
+        else
+            z >>= 1;
+
+        if (z == 16)
+            dir = 1;
+        else if (z == 1)
+            dir = 0;
+    }
  
     return 0;
 }
