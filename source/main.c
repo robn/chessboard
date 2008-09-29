@@ -38,7 +38,8 @@ void draw_board(u16 *map, int tile, int zoom) {
 
     for (y = 0; y < 24; y++)
         for (x = 0; x < 32; x++)
-            map[y*32+x] = ((x & zoom) ? 1 : 0) ^ ((y & zoom) ? 1 : 0);
+            //map[y*32+x] = ((x & zoom) ? 1 : 0) ^ ((y & zoom) ? 1 : 0);
+            map[y*32+x] = ((x / zoom) & 1) ^ ((y / zoom) & 1);
 }
  
 int main(void) {
@@ -88,9 +89,9 @@ int main(void) {
         draw_board(map0, 1, z);
 
         if (dir == 0)
-            z <<= 1;
+            z++;
         else
-            z >>= 1;
+            z--;
 
         if (z == 16)
             dir = 1;
