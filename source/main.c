@@ -33,30 +33,50 @@ u8 blue_tile[64] = {
     2,2,2,2,2,2,2,2
 };
 
-#define DO_TILE(x,y,z) ((((x)/(z)) & 1) ^ (((y)/(z)) & 1))
+#define ABS(n) ({ int _n = (n); _n < 0 ? -_n : _n; })
+
+#define DO_TILE(x,y,z) ({ int _x = (x), _y = (y), _z = (z); ((ABS(_x)/_z) & 1) ^ ((ABS(_y)/_z) & 1) ^ (_x < 0) ^ (_y < 0); })
  
 void draw_board(u16 *map, int tile, int zoom, int anchor) {
     int x, y;
 
-    if (anchor == 0)
-        for (y = 0; y < 24; y++)
-            for (x = 0; x < 32; x++)
-                map[y*32+x] = DO_TILE(x, y, zoom) * tile;
+    switch (anchor) {
 
-    else if (anchor == 1)
-        for (y = 0; y < 24; y++)
-            for (x = 0; x < 32; x++)
-                map[y*32+x] = DO_TILE(31-x, y, zoom) * tile;
+        /* centre */
+        case 0:
+            for (y = 0; y < 24; y++)
+                for (x = 0; x < 32; x++)
+                    map[y*32+x] = DO_TILE(16-x, 12-y, zoom) * tile;
+            break;
 
-    else if (anchor == 2)
-        for (y = 0; y < 24; y++)
-            for (x = 0; x < 32; x++)
-                map[y*32+x] = DO_TILE(31-x, 23-y, zoom) * tile;
+        /* top left */
+        case 1:
+            for (y = 0; y < 24; y++)
+                for (x = 0; x < 32; x++)
+                    map[y*32+x] = DO_TILE(x, y, zoom) * tile;
+            break;
 
-    else if (anchor == 3)
-        for (y = 0; y < 24; y++)
-            for (x = 0; x < 32; x++)
-                map[y*32+x] = DO_TILE(x, 23-y, zoom) * tile;
+        /* top right */
+        case 2:
+            for (y = 0; y < 24; y++)
+                for (x = 0; x < 32; x++)
+                    map[y*32+x] = DO_TILE(31-x, y, zoom) * tile;
+            break;
+
+        /* bottom right */
+        case 3:
+            for (y = 0; y < 24; y++)
+                for (x = 0; x < 32; x++)
+                    map[y*32+x] = DO_TILE(31-x, 23-y, zoom) * tile;
+            break;
+
+        /* bottom left */
+        case 4:
+            for (y = 0; y < 24; y++)
+                for (x = 0; x < 32; x++)
+                    map[y*32+x] = DO_TILE(x, 23-y, zoom) * tile;
+            break;
+    }
 }
  
 int main(void) {
@@ -103,7 +123,7 @@ int main(void) {
         n = 4;
 
         draw_board(map0, 1, z, 0);
-        draw_board(map1, 2, z, 2);
+        //draw_board(map1, 2, z, 2);
 
         if (dir == 0)
             z++;
