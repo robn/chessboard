@@ -34,9 +34,7 @@ u8 blue_tile[64] = {
     2,2,2,2,2,2,2,2
 };
 
-#define ABS(n) ({ int _n = (n); _n < 0 ? -_n : _n; })
-
-#define DO_TILE(x,y,z) ({ int _x = (x), _y = (y), _z = (z); (((_x + (_x < 0)) / _z) & 1) ^ (((_y + (_y < 0)) / _z) & 1) ^ (_x < 0) ^ (_y < 0); })
+#define TILE_AT(x,y,z) ({ int _x = (x), _y = (y), _z = (z); (((_x + (_x < 0)) / _z) & 1) ^ (((_y + (_y < 0)) / _z) & 1) ^ (_x < 0) ^ (_y < 0); })
 
 void draw_board(u16 *map, int tile, int zoom, int anchor) {
     int x, y;
@@ -47,7 +45,7 @@ void draw_board(u16 *map, int tile, int zoom, int anchor) {
         case 0:
             for (y = 0; y < 24; y++)
                 for (x = 0; x < 32; x++) {
-                    map[y*32+x] = DO_TILE(16-zoom-x, 12-zoom-y, zoom) * tile;
+                    map[y*32+x] = TILE_AT(16-zoom-x, 12-zoom-y, zoom) * tile;
                 }
             break;
 
@@ -55,28 +53,28 @@ void draw_board(u16 *map, int tile, int zoom, int anchor) {
         case 1:
             for (y = 0; y < 24; y++)
                 for (x = 0; x < 32; x++)
-                    map[y*32+x] = DO_TILE(x, y, zoom) * tile;
+                    map[y*32+x] = TILE_AT(x, y, zoom) * tile;
             break;
 
         /* top right */
         case 2:
             for (y = 0; y < 24; y++)
                 for (x = 0; x < 32; x++)
-                    map[y*32+x] = DO_TILE(31-x, y, zoom) * tile;
+                    map[y*32+x] = TILE_AT(31-x, y, zoom) * tile;
             break;
 
         /* bottom right */
         case 3:
             for (y = 0; y < 24; y++)
                 for (x = 0; x < 32; x++)
-                    map[y*32+x] = DO_TILE(31-x, 23-y, zoom) * tile;
+                    map[y*32+x] = TILE_AT(31-x, 23-y, zoom) * tile;
             break;
 
         /* bottom left */
         case 4:
             for (y = 0; y < 24; y++)
                 for (x = 0; x < 32; x++)
-                    map[y*32+x] = DO_TILE(x, 23-y, zoom) * tile;
+                    map[y*32+x] = TILE_AT(x, 23-y, zoom) * tile;
             break;
     }
 }
