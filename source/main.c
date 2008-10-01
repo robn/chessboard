@@ -12,7 +12,7 @@ void draw_board(u16 *map, int tile, int zoom, int anchor) {
         case 0:
             for (y = 0; y < 24; y++)
                 for (x = 0; x < 32; x++) {
-                    map[y*32+x] = TILE_AT(16-zoom-x, 12-zoom-y, zoom) * tile;
+                    map[y*32+x] = TILE_AT((15 - (zoom >> 1) - x), (11 - (zoom >> 1) - y), zoom) * tile;
                 }
             break;
 
@@ -76,8 +76,8 @@ int main(void) {
         tile[i+64] = 1;
         tile[i+128] = 2;
     }
-  
-    int z = 1, dir = 0, n = 4;
+
+    int z = 1, n = 4;
     while (1) {
         swiWaitForVBlank();
         if (--n)
@@ -85,17 +85,10 @@ int main(void) {
         n = 4;
 
         draw_board(map0, 1, z, 0);
-        draw_board(map1, 2, 17-z, 0);
 
-        if (dir == 0)
-            z++;
-        else
-            z--;
-
-        if (z == 16)
-            dir = 1;
-        else if (z == 1)
-            dir = 0;
+        z++;
+        if (z == 33)
+            break;
     }
  
     return 0;
