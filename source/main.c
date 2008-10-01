@@ -36,7 +36,7 @@ u8 blue_tile[64] = {
 #define ABS(n) ({ int _n = (n); _n < 0 ? -_n : _n; })
 
 #define DO_TILE(x,y,z) ({ int _x = (x), _y = (y), _z = (z); ((_x/_z) & 1) ^ ((_y/_z) & 1) ^ (_x < 0) ^ (_y < 0); })
- 
+
 void draw_board(u16 *map, int tile, int zoom, int anchor) {
     int x, y;
 
@@ -45,8 +45,11 @@ void draw_board(u16 *map, int tile, int zoom, int anchor) {
         /* centre */
         case 0:
             for (y = 0; y < 24; y++)
-                for (x = 0; x < 32; x++)
-                    map[y*32+x] = DO_TILE(16-x, 12-y, 1) * tile;
+                for (x = 0; x < 32; x++) {
+                    int p = DO_TILE(16-zoom+1-x, 12-zoom+1-y, zoom);
+                    map[y*32+x] = !p ? 0 : (x == 16 || y == 12) ? 1 : 2;
+                    //map[y*32+x] = DO_TILE(16-x, 12-y, 2) * tile;
+                }
             break;
 
         /* top left */
