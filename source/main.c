@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <nds.h>
 
 u8 blank_tile[64] = {
@@ -99,6 +100,12 @@ int main(void) {
     BG0_CR = BG_32x32 | BG_COLOR_256 | BG_MAP_BASE(0) | BG_TILE_BASE(1);
     BG1_CR = BG_32x32 | BG_COLOR_256 | BG_MAP_BASE(1) | BG_TILE_BASE(1);
  
+    videoSetModeSub(MODE_0_2D | DISPLAY_BG0_ACTIVE);
+    vramSetBankC(VRAM_C_SUB_BG);
+    SUB_BG0_CR = BG_MAP_BASE(31);
+    BG_PALETTE_SUB[255] = RGB15(0x1f, 0x1f, 0x1f);
+    consoleInitDefault((u16 *) SCREEN_BASE_BLOCK_SUB(0x1f), (u16 *) CHAR_BASE_BLOCK_SUB(0), 16);
+
     //load our palette
     BG_PALETTE[0] = RGB15(0,0,0);
     BG_PALETTE[1] = RGB15(0x1b,0x1b,0x3);
