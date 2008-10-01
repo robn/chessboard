@@ -77,18 +77,31 @@ int main(void) {
         tile[i+128] = 2;
     }
 
-    int z = 1, n = 4;
+    int z0 = 1, z1 = 0, n = 4;
     while (1) {
         swiWaitForVBlank();
         if (--n)
             continue;
         n = 4;
 
-        draw_board(map0, 1, z, 0);
+        if (z0) {
+            draw_board(map0, 1, z0, 0);
+            z0++;
+        }
+        if (z1) {
+            draw_board(map1, 2, z1, 0);
+            z1++;
+        }
 
-        z++;
-        if (z == 33)
-            break;
+        if (z0 == 16)
+            z1 = 1;
+        else if (z0 == 33)
+            z0 = 0;
+
+        if (z1 == 16)
+            z0 = 1;
+        else if (z1 == 33)
+            z1 = 0;
     }
  
     return 0;
