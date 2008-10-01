@@ -70,11 +70,7 @@ int main(void) {
     BG_PALETTE_SUB[255] = RGB15(0x1f, 0x1f, 0x1f);
     consoleInitDefault((u16 *) SCREEN_BASE_BLOCK_SUB(0x1f), (u16 *) CHAR_BASE_BLOCK_SUB(0), 16);
 
-    BG_PALETTE[0] = RGB15(0,0,0);
-    BG_PALETTE[1] = RGB15(0x1b,0x1b,0x3);
-    BG_PALETTE[2] = RGB15(0x3,0x3,0x1b);
-    BG_PALETTE[3] = RGB15(0x1b,0x3,0x3);
-    BG_PALETTE[4] = RGB15(0x3,0x1b,0x3);
+    BG_PALETTE[0] = 0;
 
     int i;
     for (i = 0; i < 64; i++) {
@@ -93,14 +89,22 @@ int main(void) {
             continue;
         n = 4;
 
-        if (z0 < 32)
+        if (z0 < 32) {
+            BG_PALETTE[1] = RGB15(z0,z0,0);
             draw_board(map0, 1, z0 + 1, 0);
-        if (z1 < 32)
+        }
+        if (z1 < 32) {
+            BG_PALETTE[2] = RGB15(0,0,z1);
             draw_board(map1, 2, z1 + 1, 0);
-        if (z2 < 32)
+        }
+        if (z2 < 32) {
+            BG_PALETTE[3] = RGB15(z2,0,0);
             draw_board(map2, 3, z2 + 1, 0);
-        if (z3 < 32)
+        }
+        if (z3 < 32) {
+            BG_PALETTE[4] = RGB15(0,z3,0);
             draw_board(map3, 4, z3 + 1, 0);
+        }
 
         z0 = (z0 + 1) % 32;
         z1 = (z1 + 1) % 32;
