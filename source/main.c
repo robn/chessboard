@@ -50,15 +50,19 @@ int main(void) {
     irqInit();
     irqEnable(IRQ_VBLANK);
 
-    videoSetMode(MODE_0_2D | DISPLAY_BG0_ACTIVE | DISPLAY_BG1_ACTIVE);
+    videoSetMode(MODE_0_2D | DISPLAY_BG0_ACTIVE | DISPLAY_BG1_ACTIVE | DISPLAY_BG2_ACTIVE | DISPLAY_BG3_ACTIVE);
     vramSetBankA(VRAM_A_MAIN_BG_0x06000000);
  
     u8 *tile = (u8 *) BG_TILE_RAM(1);
     u16 *map0 = (u16 *) BG_MAP_RAM(0);
     u16 *map1 = (u16 *) BG_MAP_RAM(1);
+    u16 *map2 = (u16 *) BG_MAP_RAM(2);
+    u16 *map3 = (u16 *) BG_MAP_RAM(3);
     
-    BG0_CR = BG_32x32 | BG_COLOR_256 | BG_MAP_BASE(0) | BG_TILE_BASE(1) | BG_PRIORITY_1;
-    BG1_CR = BG_32x32 | BG_COLOR_256 | BG_MAP_BASE(1) | BG_TILE_BASE(1) | BG_PRIORITY_0;
+    BG0_CR = BG_32x32 | BG_COLOR_256 | BG_MAP_BASE(0) | BG_TILE_BASE(1) | BG_PRIORITY_3;
+    BG1_CR = BG_32x32 | BG_COLOR_256 | BG_MAP_BASE(1) | BG_TILE_BASE(1) | BG_PRIORITY_2;
+    BG2_CR = BG_32x32 | BG_COLOR_256 | BG_MAP_BASE(2) | BG_TILE_BASE(1) | BG_PRIORITY_1;
+    BG3_CR = BG_32x32 | BG_COLOR_256 | BG_MAP_BASE(3) | BG_TILE_BASE(1) | BG_PRIORITY_0;
  
     videoSetModeSub(MODE_0_2D | DISPLAY_BG0_ACTIVE);
     vramSetBankC(VRAM_C_SUB_BG);
@@ -69,15 +73,19 @@ int main(void) {
     BG_PALETTE[0] = RGB15(0,0,0);
     BG_PALETTE[1] = RGB15(0x1b,0x1b,0x3);
     BG_PALETTE[2] = RGB15(0x3,0x3,0x1b);
+    BG_PALETTE[3] = RGB15(0x1b,0x3,0x3);
+    BG_PALETTE[4] = RGB15(0x3,0x1b,0x3);
 
     int i;
     for (i = 0; i < 64; i++) {
         tile[i] = 0;
         tile[i+64] = 1;
         tile[i+128] = 2;
+        tile[i+192] = 3;
+        tile[i+256] = 4;
     }
 
-    int z0 = 0, z1 = 20;
+    int z0 = 0, z1 = 14, z2 = 28, z3 = 42;
     int n = 4;
     while (1) {
         swiWaitForVBlank();
@@ -89,14 +97,22 @@ int main(void) {
             draw_board(map0, 1, z0 + 1, 0);
         if (z1 < 32)
             draw_board(map1, 2, z1 + 1, 0);
+        if (z2 < 32)
+            draw_board(map2, 3, z2 + 1, 0);
+        if (z3 < 32)
+            draw_board(map3, 4, z3 + 1, 0);
 
-        z0 = (z0 + 1) % 40;
-        z1 = (z1 + 1) % 40;
+        z0 = (z0 + 1) % 56;
+        z1 = (z1 + 1) % 56;
+        z2 = (z2 + 1) % 56;
+        z3 = (z3 + 1) % 56;
 
-        if (!z0 || !z1) {
+        if (!z0 || !z1 || !z2 || !z3) {
             int pt = BG0_CR & 0x3;
             BG0_CR = (BG0_CR & 0xfffc) | (BG1_CR & 0x3);
-            BG1_CR = (BG1_CR & 0xfffc) | (pt & 0x3);
+            BG1_CR = (BG1_CR & 0xfffc) | (BG2_CR & 0x3);
+            BG2_CR = (BG2_CR & 0xfffc) | (BG3_CR & 0x3);
+            BG3_CR = (BG3_CR & 0xfffc) | (pt & 0x3);
         }
     }
  
