@@ -145,12 +145,12 @@ int main(void) {
     swiCopy(tile4, tile + 256, 32);
 
     int z0 = 0, z1 = 8, z2 = 16, z3 = 24;
-    int n = 4;
+    int n = 2;
     while (1) {
         swiWaitForVBlank();
         if (--n)
             continue;
-        n = 4;
+        n = 2;
 
         if (z0 < 32) {
             BG_PALETTE[1] = RGB15(z0,z0,0);
