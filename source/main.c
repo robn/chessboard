@@ -57,8 +57,8 @@ int main(void) {
     u16 *map0 = (u16 *) BG_MAP_RAM(0);
     u16 *map1 = (u16 *) BG_MAP_RAM(1);
     
-    BG0_CR = BG_32x32 | BG_COLOR_256 | BG_MAP_BASE(0) | BG_TILE_BASE(1);
-    BG1_CR = BG_32x32 | BG_COLOR_256 | BG_MAP_BASE(1) | BG_TILE_BASE(1);
+    BG0_CR = BG_32x32 | BG_COLOR_256 | BG_MAP_BASE(0) | BG_TILE_BASE(1) | BG_PRIORITY_1;
+    BG1_CR = BG_32x32 | BG_COLOR_256 | BG_MAP_BASE(1) | BG_TILE_BASE(1) | BG_PRIORITY_0;
  
     videoSetModeSub(MODE_0_2D | DISPLAY_BG0_ACTIVE);
     vramSetBankC(VRAM_C_SUB_BG);
@@ -77,31 +77,27 @@ int main(void) {
         tile[i+128] = 2;
     }
 
-    int z0 = 1, z1 = 0, n = 4;
+    int z0 = 0, z1 = 20;
+    int n = 4;
     while (1) {
         swiWaitForVBlank();
         if (--n)
             continue;
         n = 4;
 
-        if (z0) {
-            draw_board(map0, 1, z0, 0);
-            z0++;
-        }
-        if (z1) {
-            draw_board(map1, 2, z1, 0);
-            z1++;
-        }
+        if (z0 < 32)
+            draw_board(map0, 1, z0 + 1, 0);
+        if (z1 < 32)
+            draw_board(map1, 2, z1 + 1, 0);
 
-        if (z0 == 16)
-            z1 = 1;
-        else if (z0 == 33)
-            z0 = 0;
+        z0 = (z0 + 1) % 40;
+        z1 = (z1 + 1) % 40;
 
-        if (z1 == 16)
-            z0 = 1;
-        else if (z1 == 33)
-            z1 = 0;
+        if (!z0 || !z1) {
+            int pt = BG0_CR & 0x3;
+            BG0_CR = (BG0_CR & 0xfffc) | (BG1_CR & 0x3);
+            BG1_CR = (BG1_CR & 0xfffc) | (pt & 0x3);
+        }
     }
  
     return 0;
