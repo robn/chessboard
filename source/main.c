@@ -85,7 +85,7 @@ int main(void) {
         tile[i+256] = 4;
     }
 
-    int z0 = 0, z1 = 14, z2 = 28, z3 = 42;
+    int z0 = 0, z1 = 8, z2 = 16, z3 = 24;
     int n = 4;
     while (1) {
         swiWaitForVBlank();
@@ -102,10 +102,10 @@ int main(void) {
         if (z3 < 32)
             draw_board(map3, 4, z3 + 1, 0);
 
-        z0 = (z0 + 1) % 56;
-        z1 = (z1 + 1) % 56;
-        z2 = (z2 + 1) % 56;
-        z3 = (z3 + 1) % 56;
+        z0 = (z0 + 1) % 32;
+        z1 = (z1 + 1) % 32;
+        z2 = (z2 + 1) % 32;
+        z3 = (z3 + 1) % 32;
 
         if (!z0 || !z1 || !z2 || !z3) {
             int pt = BG0_CR & 0x3;
