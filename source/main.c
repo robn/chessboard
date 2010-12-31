@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <nds.h>
+#include <nds/registers_alt.h>
 
 #define TILE_AT(x,y,z) ({ int _x = (x), _y = (y), _z = (z); (((_x + (_x < 0)) / _z) & 1) ^ (((_y + (_y < 0)) / _z) & 1) ^ (_x < 0) ^ (_y < 0); })
 
@@ -68,7 +69,8 @@ int main(void) {
     vramSetBankC(VRAM_C_SUB_BG);
     SUB_BG0_CR = BG_MAP_BASE(31);
     BG_PALETTE_SUB[255] = RGB15(0x1f, 0x1f, 0x1f);
-    consoleInitDefault((u16 *) SCREEN_BASE_BLOCK_SUB(0x1f), (u16 *) CHAR_BASE_BLOCK_SUB(0), 16);
+    //consoleInitDefault((u16 *) SCREEN_BASE_BLOCK_SUB(0x1f), (u16 *) CHAR_BASE_BLOCK_SUB(0), 16);
+    consoleDemoInit();
 
     BG_PALETTE[0] = 0;
 
